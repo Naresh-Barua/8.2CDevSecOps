@@ -1,19 +1,12 @@
 pipeline {
   agent any
 
-  stages {
-    stage('Prepare Environment') {
-      steps {
-        // Install curl & Node.js 18 on this Debian-based Jenkins container
-        sh '''
-          apt-get update
-          apt-get install -y curl gnupg
-          curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-          apt-get install -y nodejs
-        '''
-      }
-    }
+  tools {
+    // Must match the Name field in your Global Tool Config
+    nodejs 'nodejs18'
+  }
 
+  stages {
     stage('Checkout') {
       steps {
         git branch: 'main',
