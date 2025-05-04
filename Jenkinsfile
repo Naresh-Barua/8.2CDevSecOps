@@ -1,5 +1,12 @@
 pipeline {
-  agent any
+  // Use the official Node image so npm is available
+  agent {
+    docker {
+      image 'node:18-alpine'
+      // If your Jenkins user needs extra permissions you can add args,
+      // e.g. args '-u root:root', but typically this works out of the box.
+    }
+  }
 
   stages {
     stage('Checkout') {
