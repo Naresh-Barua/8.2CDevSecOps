@@ -1,17 +1,23 @@
 pipeline {
-  // Use the official Node image so npm is available
-  agent {
-    docker {
-      image 'node:18-alpine'
-      // If your Jenkins user needs extra permissions you can add args,
-      // e.g. args '-u root:root', but typically this works out of the box.
-    }
-  }
+  agent any
 
   stages {
+    stage('Prepare Environment') {
+      steps {
+        // Install curl & Node.js 18 on this Debian-based Jenkins container
+        sh '''
+          apt-get update
+          apt-get install -y curl gnupg
+          curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+          apt-get install -y nodejs
+        '''
+      }
+    }
+
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/Naresh-Barua/8.2CDevSecOps.git'
+        git branch: 'main',
+            url:   'https://github.com/Naresh-Barua/8.2CDevSecOps.git'
       }
     }
 
