@@ -42,11 +42,12 @@ pipeline {
     always {
       // send an email regardless of build result
       emailext(
-        to:      'nareshbarua123@gmail.com',           
+         from:    'thames3128@gmail.com',
+        to:      's225123878@deakin.edu.au,nareshbarua123@gmail.com',
         subject: "Build ${currentBuild.fullDisplayName}: ${currentBuild.currentResult}",
-        body:    """\
-Build URL: ${env.BUILD_URL}
-Status:    ${currentBuild.currentResult}
+        body:    """
+          Build URL: ${env.BUILD_URL}
+          Status:    ${currentBuild.currentResult}
 
 See console output at:
   ${env.BUILD_URL}console
