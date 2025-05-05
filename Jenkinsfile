@@ -1,16 +1,11 @@
 pipeline {
   agent any
 
-  tools {
-    // Must match the Name field in your Global Tool Config
-    nodejs 'nodejs18'
-  }
-
   stages {
     stage('Checkout') {
       steps {
         git branch: 'main',
-            url:   'https://github.com/Naresh-Barua/8.2CDevSecOps.git'
+            url:    'https://github.com/your_github_username/8.2CDevSecOps.git'
       }
     }
 
@@ -22,12 +17,14 @@ pipeline {
 
     stage('Run Tests') {
       steps {
+        // run your Snyk tests; allow failures so pipeline continues
         sh 'npm test || true'
       }
     }
 
     stage('Generate Coverage Report') {
       steps {
+        // if you have a coverage script
         sh 'npm run coverage || true'
       }
     }
@@ -36,6 +33,23 @@ pipeline {
       steps {
         sh 'npm audit || true'
       }
+    }
+  }
+
+  post {
+    always {
+      // send an email regardless of build result
+      emailext(
+        to:      'nareshbarua123@gmail.com',           
+        subject: "Build ${currentBuild.fullDisplayName}: ${currentBuild.currentResult}",
+        body:    """\
+Build URL: ${env.BUILD_URL}
+Status:    ${currentBuild.currentResult}
+
+See console output at:
+  ${env.BUILD_URL}console
+""".stripIndent()
+      )
     }
   }
 }
